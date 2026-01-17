@@ -1,0 +1,19 @@
+
+# Node
+node_modules/
+npm-debug.log*
+dist/
+.vite/
+
+# Laravel / PHP
+vendor/
+.env
+.env.*
+storage/logs/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+
+# OS & editor
+.DS_Store
+*.log
