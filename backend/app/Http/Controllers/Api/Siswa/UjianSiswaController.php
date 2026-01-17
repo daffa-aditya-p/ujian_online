@@ -227,6 +227,14 @@ class UjianSiswaController extends Controller
         return $jawabanBenar === $jawabanSiswa;
     }
 
+    // Get server time untuk security check
+    public function getServerTime()
+    {
+        return response()->json([
+            'server_time' => Carbon::now()->toIso8601String()
+        ]);
+    }
+
     // Get status ujian siswa
     public function getStatus(Request $request, $ujianId)
     {

@@ -10,11 +10,12 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     // Daftar semua user
-    public function index()
+    public function index(Request $request)
     {
+        $perPage = $request->query('per_page', 15);
         $users = User::select('id', 'nis', 'nama', 'is_admin', 'is_guru', 'is_locked')
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate($perPage);
 
         return response()->json($users);
     }

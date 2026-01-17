@@ -1,35 +1,61 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { LoginPage, AdminDashboard, GuruDashboard, SiswaDashboard, UjianPage } from './pages';
 
-function App() {
-  const [count, setCount] = useState(0)
+function ProtectedRoute({ children, allowedRoles }: { children: React.ReactNode; allowedRoles: string[] }) {
+  const user = JSON.parse(localStorage.getItem('user') || 'null');
+  const token = localStorage.getItem('token');
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+  if (!user || !token) {
+    return <Navigate to="/" replace />;
+  }
+
+  const userRole = user.is_admin ? 'admin' : user.is_guru ? 'guru' : 'siswa';
+  if (!allowedRoles.includes(userRole)) {
+    return <Navigate to="/" replace />;
+  }
+
+  return <>{children}</>;
 }
 
-export default App
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LoginPage />} />
+        <Route
+          path="/admin/*"
+          element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/guru/*"
+          element={
+            <ProtectedRoute allowedRoles={['guru']}>
+              <GuruDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/siswa"
+          element={
+            <ProtectedRoute allowedRoles={['siswa']}>
+              <SiswaDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/siswa/ujian/:id"
+          element={
+            <ProtectedRoute allowedRoles={['siswa']}>
+              <UjianPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}

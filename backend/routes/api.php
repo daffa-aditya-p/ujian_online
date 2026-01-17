@@ -58,6 +58,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/ujian/{ujianId}/submit-jawaban', [UjianSiswaController::class, 'submitJawaban']);
         Route::post('/ujian/{ujianId}/submit', [UjianSiswaController::class, 'submitUjian']);
         Route::get('/ujian/{ujianId}/status', [UjianSiswaController::class, 'getStatus']);
+        Route::get('/ujian/server-time', [UjianSiswaController::class, 'getServerTime']);
     });
 
     // Security Logs (untuk siswa saat ujian)

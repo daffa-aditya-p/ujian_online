@@ -13,7 +13,7 @@ class UjianController extends Controller
     public function index(Request $request)
     {
         $ujians = Ujian::where('guru_id', $request->user()->id)
-            ->withCount('soals')
+            ->withCount(['soals', 'hasilUjians'])
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -48,11 +48,15 @@ class UjianController extends Controller
     }
 
     // Detail ujian
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $ujian = Ujian::with('soals')
             ->where('id', $id)
             ->firstOrFail();
+
+        if ($ujian->guru_id !== $request->user()->id) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
 
         return response()->json($ujian);
     }

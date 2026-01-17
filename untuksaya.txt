@@ -1,0 +1,118 @@
+================================================================================
+                    PANDUAN MENJALANKAN SISTEM UJIAN ONLINE
+================================================================================
+
+📦 SEMUA SUDAH SIAP! Tinggal jalankan perintah berikut:
+
+================================================================================
+LANGKAH 1: JALANKAN BACKEND (Terminal 1)
+================================================================================
+
+cd /workspaces/ujian_online/backend
+/usr/bin/php8.2 artisan serve --host=0.0.0.0 --port=8000
+
+# Backend akan berjalan di: http://localhost:8000
+
+================================================================================
+LANGKAH 2: JALANKAN FRONTEND (Terminal 2 - buka terminal baru)
+================================================================================
+
+cd /workspaces/ujian_online/ujian_online
+npm run dev
+
+# Frontend akan berjalan di: http://localhost:5173
+
+================================================================================
+LANGKAH 3: BUKA BROWSER
+================================================================================
+
+Buka: http://localhost:5173
+
+================================================================================
+AKUN LOGIN YANG TERSEDIA
+================================================================================
+
+┌─────────────┬─────────────┬─────────────┐
+│    ROLE     │     NIS     │  PASSWORD   │
+├─────────────┼─────────────┼─────────────┤
+│   Admin     │  admin001   │  admin123   │
+│   Guru      │  guru001    │  guru123    │
+│   Siswa     │  siswa001   │  siswa123   │
+│   Siswa     │  siswa002   │  siswa123   │
+└─────────────┴─────────────┴─────────────┘
+
+================================================================================
+TEST API DENGAN CURL (Optional)
+================================================================================
+
+# Test Login Admin:
+curl -X POST http://localhost:8000/api/login \
+  -H "Content-Type: application/json" \
+  -d '{"nis":"admin001","password":"admin123"}'
+
+# Test Login Guru:
+curl -X POST http://localhost:8000/api/login \
+  -H "Content-Type: application/json" \
+  -d '{"nis":"guru001","password":"guru123"}'
+
+# Test Login Siswa:
+curl -X POST http://localhost:8000/api/login \
+  -H "Content-Type: application/json" \
+  -d '{"nis":"siswa001","password":"siswa123"}'
+
+================================================================================
+JIKA ADA MASALAH
+================================================================================
+
+1. Reset Database:
+   cd /workspaces/ujian_online/backend
+   /usr/bin/php8.2 artisan migrate:fresh --seed --force
+
+2. Clear Cache:
+   cd /workspaces/ujian_online/backend
+   /usr/bin/php8.2 artisan config:clear
+   /usr/bin/php8.2 artisan cache:clear
+
+3. Rebuild Frontend:
+   cd /workspaces/ujian_online/ujian_online
+   npm run build
+
+================================================================================
+STRUKTUR FITUR
+================================================================================
+
+🔐 LOGIN PAGE (/)
+   - Form login dengan NIS dan Password
+   - Auto-redirect berdasarkan role
+
+👨‍💼 ADMIN DASHBOARD (/admin)
+   - Kelola pengguna (CRUD)
+   - Lihat security logs
+   - Statistik sistem
+
+👨‍🏫 GURU DASHBOARD (/guru)
+   - Kelola ujian (CRUD)
+   - Kelola soal
+   - Lihat hasil ujian siswa
+
+👨‍🎓 SISWA DASHBOARD (/siswa)
+   - Lihat daftar ujian
+   - Mengerjakan ujian
+   - Lihat hasil ujian
+
+📝 HALAMAN UJIAN (/siswa/ujian/:id)
+   - Mode fullscreen wajib
+   - 9 monitoring keamanan:
+     1. Fullscreen detection
+     2. Tab switch detection
+     3. Window blur/focus
+     4. DevTools detection
+     5. Keyboard shortcut blocking
+     6. Clipboard blocking
+     7. Window minimize detection
+     8. Time drift detection
+     9. Auto-save jawaban
+
+================================================================================
+SELAMAT MENGGUNAKAN! 🎉
+================================================================================
